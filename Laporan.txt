@@ -1,0 +1,109 @@
+Laporan Proyek Machine Learning - [Titi Prihartati]
+
+Judul : Pembangunan Sistem Rekomendasi untuk Memprediksi Preferensi Pembelian Pelanggan menggunakan Colaborative Filtering pada Dataset Walmart Customer Purchase Behavior
+
+Project Overview
+Proyek ini bertujuan untuk membangun sistem rekomendasi pembelian pelanggan Walmart menggunakan pendekatan Collaborative Filtering, khususnya User-Based Collaborative Filtering.
+Sistem ini mengandalkan profil pelanggan (seperti usia dan negara), metode pembayaran, preferensi historis, dan kategori produk yang dibeli untuk menemukan pelanggan lain yang memiliki
+pola belanja serupa. Dengan mencocokkan karakteristik pelanggan terhadap pengguna yang mirip, sistem ini dapat memberikan rekomendasi produk yang dipersonalisasi. Sistem ini penting karena
+dalam e-commerce berskala besar seperti Walmart, kemampuan memberikan rekomendasi yang relevan dapat meningkatkan penjualan dan pengalaman pengguna. Selain itu, pendekatan ini tidak bergantung
+pada rating eksplisit, sehingga cocok untuk diterapkan pada data transaksi riil. Menurut Lops et al. (2011), sistem rekomendasi berbasis perilaku pengguna juga efektif dalam menghasilkan saran yang
+relevan ketika interaksi eksplisit terbatas.
+
+Referensi :
+Lops, P., De Gemmis, M., & Semeraro, G. (2011). Content-based recommender systems: State of the art and trends. Recommender systems handbook, 73-105.
+Wijaya, A. E., & Alfian, D. (2018). Sistem Rekomendasi Laptop Menggunakan Collaborative Filtering Dan Content-Based Filtering. Jurnal Computech & Bisnis, 12(1), 11-27.
+
+Business Understanding :
+Problem Statement :
+- Bagaimana membangun sistem rekomendasi produk menggunakan pendekatan Collaborative Filtering berdasarkan data transaksi pelanggan?
+- Sejauh mana sistem rekomendasi yang dibangun efektif dalam memberikan saran produk yang relevan dan bermanfaat bagi pelanggan?
+Goals:
+- Mengembangkan sistem rekomendasi produk berbasis Collaborative Filtering dengan memanfaatkan atribut pelanggan dan histori interaksi pembelian.
+- Mengevaluasi efektivitas sistem rekomendasi menggunakan metrik yang sesuai seperti Precision@N, Recall@N, dan NDCG.
+Solution Approach:
+- Membangun profil pelanggan berdasarkan atribut seperti usia, negara, metode pembayaran, dan histori pembelian kategori produk.
+- Menerapkan algoritma User-Based Collaborative Filtering untuk menemukan pelanggan dengan pola belanja serupa.
+- Menggunakan metrik evaluasi seperti Precision@N, Recall@N, dan NDCG untuk mengukur relevansi dan kualitas rekomendasi.
+- Menyediakan output berupa daftar Top-N produk yang direkomendasikan secara personal untuk setiap pelanggan.
+
+Data Understanding
+Dataset : Walmart Customer Purchase Behavior Dataset
+Sumber : https://www.kaggle.com/datasets/smayanj/e-commerce-transactions-dataset
+jumlah data : 50000 baris dan 8 kolom
+
+Informasi data
+Pada tahap ini, dilakukan eksplorasi awal terhadap dataset yang digunakan untuk membangun sistem rekomendasi.
+Dataset yang digunakan sebanyak 50.000 data yang berisi informasi transaksi pelanggan dari Walmart,
+dengan masing-masing baris merepresentasikan satu transaksi pembelian.
+Data set ini terdiri dari beberapa fitur utama sebagai berikut
+- Transaction_ID    : ID unik untuk setiap transaksi.
+- User_Name	        : Nama pelanggan yang melakukan transaksi.
+- Age	              : Usia pelanggan dalam satuan tahun.
+- Country	          : Negara asal pelanggan.
+- Product_Category	: Kategori produk yang dibeli, seperti Clothing, Electronics, Home, dll.
+- Purchase_Amount	  : Jumlah uang yang dibelanjakan dalam satu transaksi (dalam satuan mata uang, misal USD).
+- Payment_Method	  : Metode pembayaran yang digunakan, seperti Credit Card, PayPal, atau Debit.
+- Transaction_Date	: Tanggal saat transaksi dilakukan.
+
+Dalam Data understanding dilakukan beberapa tahapan Exploratory Data Analysis (EDA):
+- memahami struktur data dengan melihat tipe data tiap kolom, meninjau jumlah entry dan keunikan tiap fitur.
+- melihat apakah terdapat data kosong atau duplikat data pada data set. Hal ini untuk melihat apakah data yang di gunakan sudah bersih atau belum.
+- melakukan Visualisasi Distribusi Data untuk melihat bagaimana persebaran data.
+- melakukan analisis awal terhadap perilaku pembelian dengan mengidentifkasi pola pembelian.
+- melakukan segmentasi pelanggan.
+
+Setelah dilakukan proses exploratory data analysis (EDA), dapat disimpulkan bahwa kondisi data sangat baik. Dataset ini tidak mengandung missing values. 
+Selain itu, tidak ditemukan duplikat, artinya setiap transaksi benar-benar unik dan tidak ada pengulangan data yang dapat mengganggu analisis. Pemeriksaan 
+terhadap outlier, khususnya pada kolom Purchase_Amount, juga menunjukkan bahwa nilai-nilai ekstrem yang muncul masih dalam batas wajar, kemungkinan berasal 
+dari pembelian produk dengan harga tinggi, sehingga tetap dianggap valid.
+Berdasarkan visualisasi data, kategori produk **Clothing**, **Toys**, dan **Electronics** memiliki jumlah transaksi terbanyak. Dari segi negara, transaksi 
+paling banyak terjadi di **Canada**, diikuti oleh **Mexico** dan **Germany**. Plot ini memberikan gambaran umum tentang distribusi pembelian berdasarkan 
+kategori produk, jumlah transaksi, dan metode pembayaran yang digunakan.
+
+Data Preparation
+Tahap ini bertujuan intuk membersihkan dan mempersiapkan data agar dapat digunakan secara optimal. dalam tahapan ini meliputi:
+- penanganan missing value dan duplikat data. Dalam data terlihat data sudah bersih dan tidak terdapat duplikat data. hal ini untuk memastikan kualitas data sebelum digunakan dalam model machine learning.
+- melakukan enkoding data kategorikal dengan menerapkan one hot Encoding yaitu pada data 'Product_Category', 'Country', 'Payment_Method'
+- melakukan normalisasi fitur numerik data menggunakan min-max scaling.
+- melakukan standarisasi pada data Age.
+- mengkonversi tipe data sesuai dengan yang di butuhkan.
+- Melakukan Penanganan Outlier pada data Purchase_Amount
+Dengan data yang telah dipersiapkan secara sistematis, sistem rekomendasi dapat bekerja lebih akurat dan efisien
+
+Modelling
+Sistem rekomendasi yang telah dibuat menggunakan User-Based Collaborative Filtering dengan algoritma K-Nearest Neighbors (KNN). 
+Pendekatan ini memilih pengguna yang mirip dengan pengguna yang ingin diberikan rekomendasi, berdasarkan karakteristik seperti usia, 
+negara, dan kategori produk yang dibeli. Produk yang sering dibeli oleh pengguna-pengguna yang mirip ini kemudian direkomendasikan kepada pengguna tersebut.
+
+Cara Kerja:
+- Input Data: Data yang digunakan meliputi informasi pengguna (usia, negara) dan produk yang mereka beli (kategori produk).
+Proses:
+- One-Hot Encoding diterapkan pada kolom kategori produk dan negara.
+- Normalisasi dilakukan untuk fitur numerik (misalnya, usia).
+- KNN digunakan untuk menemukan pengguna yang mirip.
+Output: Rekomendasi produk diberikan berdasarkan frekuensi pembelian produk oleh pengguna yang mirip.
+Output dari sistem rekomendasi yang dihasilkan untuk user ke-100 (misalnya) adalah Top-5 produk yang sering dibeli oleh pengguna serupa:
+===== Rekomendasi Berdasarkan Kategori Produk =====
+1. Product_Category_Sports
+2. Product_Category_Beauty
+3. Product_Category_Clothing
+4. Product_Category_Books
+5. Product_Category_Electronics
+
+Evaluasi:
+Metrik evaluasi yang digunakan untuk mengukur kinerja sistem rekomendasi meliputi **Precision**, **Recall**, **Hit Rate**, 
+**MAP (Mean Average Precision)**, dan **NDCG (Normalized Discounted Cumulative Gain)**. **Precision** mengukur proporsi produk relevan dalam rekomendasi, 
+sementara **Recall** mengukur proporsi produk relevan yang berhasil direkomendasikan. **Hit Rate** mengevaluasi apakah ada produk relevan dalam rekomendasi, 
+sementara **MAP** menghitung rata-rata presisi pada berbagai peringkat dalam rekomendasi. **NDCG** mengukur kualitas urutan rekomendasi dengan mempertimbangkan posisi produk relevan.
+Hasil evaluasi untuk User ke-100 menunjukkan bahwa **Precision\@5** adalah 0.20, yang berarti hanya 20% produk relevan yang muncul dalam rekomendasi. **Recall\@5** adalah 1.00, yang 
+menunjukkan bahwa semua produk relevan berhasil direkomendasikan, dan **Hit Rate\@5** adalah 1, yang mengindikasikan bahwa ada produk relevan dalam rekomendasi. **MAP\@5** adalah 0.20, 
+yang berarti rata-rata presisi pada rekomendasi adalah 0.20, sementara **NDCG\@5** adalah 0.34, yang menunjukkan bahwa posisi produk relevan dalam rekomendasi masih belum optimal. 
+Secara keseluruhan, meskipun sistem berhasil menemukan produk relevan (dengan Recall dan Hit Rate yang tinggi), **Precision** dan **NDCG** yang rendah menunjukkan bahwa masih banyak produk 
+yang tidak relevan direkomendasikan dan produk relevan sering muncul di urutan bawah, yang dapat menjadi area untuk perbaikan.
+
+Proyek ini menggunakan metrik evaluasi seperti **Precision\@5**, **Recall\@5**, **Hit Rate**, **MAP**, dan **NDCG** untuk menilai kualitas rekomendasi. Metrik tersebut relevan karena mampu 
+mengukur ketepatan dan relevansi rekomendasi produk, sesuai dengan kebutuhan bisnis e-commerce. Hasil evaluasi menunjukkan **recall dan hit rate tinggi**, artinya sistem berhasil menyarankan 
+produk yang memang disukai pengguna. Namun, **precision dan NDCG** masih rendah, menunjukkan perlu peningkatan dalam ketepatan dan urutan produk. Secara umum, model sudah menjawab problem 
+statement dan mendukung tujuan bisnis dengan memberikan rekomendasi yang cukup relevan, meskipun masih ada ruang untuk penyempurnaan.
+
